@@ -11,6 +11,12 @@ class BooksApp extends Component {
     books: []
   }
 
+  handleUpdate = (book,newShelf) => {
+    BooksAPI.update(book,newShelf).then(res =>  BooksAPI.getAll().then((books) => {
+      this.setState({books})
+    }))
+  }
+
   componentDidMount(){
     BooksAPI.getAll().then((books) => {
       this.setState({ books })
@@ -54,14 +60,17 @@ class BooksApp extends Component {
               <div>
                 <BookShelf
                   shelfName={"Currently Reading"}
+                  handleUpdate={this.handleUpdate}
                   books={currentlyReadingShelf}
                 />
                 <BookShelf
                   shelfName={"Want To Read"}
+                  handleUpdate={this.handleUpdate}
                   books={wantToReadShelf}
                 />
                 <BookShelf
                   shelfName={"Read"}
+                  handleUpdate={this.handleUpdate}
                   books={readShelf}
                 />
               </div>
