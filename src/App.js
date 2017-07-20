@@ -13,9 +13,13 @@ class BooksApp extends Component {
   }
 
   handleUpdate = (book,newShelf) => {
-    BooksAPI.update(book,newShelf).then(res =>  BooksAPI.getAll().then((books) => {
-      this.setState({books})
-    }))
+    BooksAPI.update(book,newShelf).then(() =>  {
+      book.shelf = newShelf
+      // Filter out book and append it so it appears at the end of new shelf
+      this.setState(state => ({
+        books: state.books.filter(b => b.id !== book.id).concat([ book ])
+      }))
+    })
   }
 
   componentDidMount(){
