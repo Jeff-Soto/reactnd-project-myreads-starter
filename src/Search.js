@@ -24,18 +24,13 @@ class Search extends Component {
       BooksAPI.search(query, 20).then((results) => {
         if (results.length > 0) {
           resultsArr = results.map(book => {
-            let formattedBook = {title: book.title, id: book.id}
-            // check if there are thumbnails and authors
-            formattedBook.thumbnail = book.imageLinks ? book.imageLinks.thumbnail : 'https://books.google.com/googlebooks/images/no_cover_thumb.gif'
-            formattedBook.author = book.authors ? book.authors : 'N/A'
-            // check if resulting book matches a book already in shelf
             for (let shelfBook of this.props.books) {
-              formattedBook.shelf = shelfBook.id === formattedBook.id ? shelfBook.shelf : 'none'
-              if (formattedBook.shelf !== 'none'){
+              book.shelf = shelfBook.id === book.id ? shelfBook.shelf : 'none'
+              if (book.shelf !== 'none'){
                 break
               }
             }
-            return formattedBook
+            return book
           })
           this.setState({results: resultsArr})
         }
@@ -43,6 +38,8 @@ class Search extends Component {
         console.log(e)
         this.setState({results: []})
       })
+    } else{
+      this.setState({results: []})
     }
   }
 
@@ -70,9 +67,10 @@ class Search extends Component {
               <li key={index}>
                 <div className="book">
                   <div className="book-top">
-                    <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.thumbnail})`}}></div>
+                  {book.imageLinks ? <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})`}}></div>
+                : <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(https://books.google.com/googlebooks/images/no_cover_thumb.gif)`}}></div>}
                     <div className="book-shelf-changer">
-                      <select value={book.shelf} onChange={(e) => this.handleUpdate({id: book.id}, e.target.value)}>
+                      <select value={book.shelf} onChange={(e) => this.handleUpdate(book, e.target.value)}>
                         <option value="none" disabled>Move to...</option>
                         <option value="currentlyReading">Currently Reading</option>
                         <option value="wantToRead">Want to Read</option>
@@ -82,7 +80,7 @@ class Search extends Component {
                     </div>
                   </div>
                   <div className="book-title">{book.title}</div>
-                  <div className="book-authors">{book.author}</div>
+                  {book.authors ? <div className="book-authors">{book.authors}</div> : <div className="book-authors">N/A </div>}
                 </div>
               </li>
             ))}

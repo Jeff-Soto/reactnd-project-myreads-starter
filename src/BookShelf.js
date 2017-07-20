@@ -25,7 +25,7 @@ class BookShelf extends Component {
                   {book.imageLinks ? <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${book.imageLinks.thumbnail})`}}></div>
                 : <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(https://books.google.com/googlebooks/images/no_cover_thumb.gif)`}}></div>}
                   <div className="book-shelf-changer">
-                    <select value={book.shelf} onChange={(e) => this.handleUpdate({id: book.id}, e.target.value)}>
+                    <select value={book.shelf} onChange={(e) => this.handleUpdate(book, e.target.value)}>
                       <option value="none" disabled>Move to...</option>
                       <option value="currentlyReading">Currently Reading</option>
                       <option value="wantToRead">Want to Read</option>
